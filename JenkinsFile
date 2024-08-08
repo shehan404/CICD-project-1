@@ -57,11 +57,16 @@ pipeline {
                     git config user.name "Shehan"
                     BUILD_NUMBER=${BUILD_NUMBER}
 
-                    # Clone the CICD-Project-1-Manifest repository
-                    git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
-
-                    cd ${GIT_REPO_NAME}
-
+                     # If the directory already exists, pull the latest changes
+                    if [ -d "${GIT_REPO_NAME}" ]; then
+                      cd ${GIT_REPO_NAME}
+                      git pull origin main
+                    else
+                      # Clone the repository if the directory doesn't exist
+                      git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
+                      cd ${GIT_REPO_NAME}
+                    fi
+                    
                     # Switch to the main branch (if needed)
                     git checkout main
                    
