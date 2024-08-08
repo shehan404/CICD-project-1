@@ -53,29 +53,29 @@ pipeline {
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "shehanon1@gmail.com"
-                    git config user.name "Shehan"
-                    BUILD_NUMBER=${BUILD_NUMBER}
-
-                     # If the directory already exists, pull the latest changes
+                   # Navigate to the existing repo or clone it
                     if [ -d "${GIT_REPO_NAME}" ]; then
                       cd ${GIT_REPO_NAME}
                       git pull origin main
                     else
-                      # Clone the repository if the directory doesn't exist
                       git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
                       cd ${GIT_REPO_NAME}
                     fi
-                    
-                    # Switch to the main branch (if needed)
+
+                    # Set the Git user configuration
+                    git config user.email "shehanon1@gmail.com"
+                    git config user.name "Shehan"
+
+                    # Make the required changes and commit
                     git checkout main
-                   
-                   
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
                     git add deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
+                 
+                    
+                    
+                  '''
             }
         }
     }
