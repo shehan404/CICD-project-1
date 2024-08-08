@@ -56,8 +56,16 @@ pipeline {
                     git config user.email "shehanon1@gmail.com"
                     git config user.name "Shehan Arampola"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    pwd
-                    ls -ltr
+
+                    # Clone the CICD-Project-1-Manifest repository
+                    git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git
+                    
+                    cd ${GIT_REPO_NAME}
+
+                    # Switch to the main branch (if needed)
+                    git checkout main
+                   
+                   
                     sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
                     git add deployment.yml
                     git commit -m "Update deployment image to version ${BUILD_NUMBER}"
